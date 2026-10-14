@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}AspirasiKita{% endblock %} | Pengaduan Masyarakat</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="{{ url_for('index') }}">
+    <span class="brand-mark">A</span>
+    <span>Aspirasi<span class="brand-light">Kita</span></span>
+  </a>
+
+  <nav>
+    <a href="{{ url_for('index') }}">Beranda</a>
+    <a href="{{ url_for('team') }}">Anggota Tim</a>
+
+    {% if session.get('user_id') %}
+      {% if session.get('role') == 'admin' %}
+        <a href="{{ url_for('admin') }}">Panel Admin</a>
+      {% else %}
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('my_reports') }}">Laporan Saya</a>
+        <a class="nav-cta" href="{{ url_for('new_report') }}">+ Buat Laporan</a>
+      {% endif %}
+
+      <span class="nav-user">{{ session.get('name') }}</span>
+      <a href="{{ url_for('logout') }}">Keluar</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">Masuk</a>
+      <a class="nav-cta" href="{{ url_for('register') }}">Daftar</a>
+    {% endif %}
+  </nav>
+</header>
+
+<main class="page">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="alerts">
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+  <span>© 2026 AspirasiKita</span>
+  <span>Suara masyarakat, perubahan bersama.</span>
+</footer>
+
+</body>
+</html>
